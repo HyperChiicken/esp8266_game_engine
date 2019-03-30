@@ -16,6 +16,7 @@ void getKey(){
   } else if (nchuk.joyX() < 64) {
     thiskey |= KEY_LEFT;     
   }
+
   if (nchuk.buttonZ()) thiskey |= KEY_A; 
 
   if (nchuk.buttonC()) thiskey |= KEY_B; 
