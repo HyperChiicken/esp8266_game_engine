@@ -1,12 +1,15 @@
-#include <Arduino.h>
 #include <Ticker.h>
 #include <SPI.h>
 #include <Wire.h>
 #include <TFT_eSPI.h>
 #include <coos.h>
 #include <FS.h>
+#include <NintendoExtensionCtrl.h>
+
 ADC_MODE(ADC_VCC);
 
+// Use nunchuck
+Nunchuk nchuk;
 // Use hardware SPI
 TFT_eSPI tft = TFT_eSPI();
 #define RAM_SIZE 20 * 1024
@@ -169,9 +172,15 @@ void setup() {
   tft.setTextSize(1);
   tft.setTextColor(0xffff);
   Serial.begin (115200);
-  Wire.begin(D2, D1);
-  geti2cAdress();
-  Serial.println(i2c_adress, HEX);
+  nchuk.begin();
+  // Wire.begin(D2, D1);
+  // geti2cAdress();
+  // Serial.println(i2c_adress, HEX);
+  while (!nchuk.connect()) {
+    Serial.println("Nunchuk not detected!");
+    delay(1000);
+  }
+
   Serial.println();
   cpuInit();
   //Initialize File System
