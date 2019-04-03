@@ -1,7 +1,7 @@
 #define FIFO_MAX_SIZE 32
 
 int16_t reg[15];
-int16_t shadow_reg[15];
+// int16_t shadow_reg[15];
 uint16_t pc = 0;
 uint16_t interrupt = 0;
 byte carry = 0;
@@ -61,9 +61,11 @@ void byteToFlags(int16_t b){
 
 void setinterrupt(uint16_t adr, int16_t param){
   if(interrupt == 0 && adr != 0){
-    shadow_reg[0] = flagsToByte();
+    reg[0] -= 2;
+    writeInt(reg[0], flagsToByte());
     for(int8_t j = 1; j <= 15; j++){
-      shadow_reg[j] = reg[j];
+      reg[0] -= 2;
+      writeInt(reg[0], reg[j]);
     }
     reg[0] -= 2;
     writeInt(reg[0], param);
@@ -505,9 +507,11 @@ void cpuStep(){
             if(pc == interrupt){
               reg[0] += 4;
               for(int8_t j = 15; j >= 1; j--){
-                reg[j] = shadow_reg[j];
+                  reg[j] = readInt(reg[0]);
+                  reg[0] += 2;
               }
-              byteToFlags(shadow_reg[0]);
+              byteToFlags(readInt(reg[0]));
+              reg[0] += 2;
               interrupt = 0;
               if(interruptFifo.size > 0)
                 setinterrupt(popOutFifo(), popOutFifo());
