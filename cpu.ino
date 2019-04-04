@@ -876,7 +876,7 @@ void cpuStep(){
                 // SPRSDS R*2 D4 9R
                 reg1 = op2 & 0xf;
                 adr = reg[reg1];//регистр указывает на участок памяти, в котором расположены последовательно direction, speed, n
-                spriteSetDirectionAndSpeed(readInt(adr + 4), readInt(adr + 2), readInt(adr));
+                spriteSetDirectionAndSpeed(readInt(adr + 4) & 31, readInt(adr + 2), readInt(adr));
                 break;
             }
             break;
@@ -943,7 +943,7 @@ void cpuStep(){
           // AGBSPR R,R     DE RR
           reg1 = (op2 & 0xf0) >> 4;//n1
           reg2 = op2 & 0xf;//n2
-          reg[reg1] = angleBetweenSprites(reg[reg1], reg[reg2]);
+          reg[reg1] = angleBetweenSprites(reg[reg1] & 31, reg[reg2] & 31);
           break;
       }
       break;
