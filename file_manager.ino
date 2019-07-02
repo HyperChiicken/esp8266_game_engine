@@ -95,4 +95,3 @@ void loadFromSPIFS(char fileName[]){
   Serial.println(system_get_free_heap_size());
   f.close();  //Close file
 }
-
